@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DozzaHealth - Medicamentos Fracionados</title>
+    <link rel="stylesheet" href="busca.css">
+</head>
+<body>
+
+    <header class="topbar">
+        <div class="logo">
+            <h2>Dozza<span>Health</span></h2>
+        </div>
+        <nav class="nav-links">
+            <a href="busca.html" class="nav-item">📦 Estoque / Busca</a>
+            <a href="fracionados.html" class="nav-item active">⚙️ Fracionados</a>
+        </nav>
+        <div class="user-info">
+            <span id="labelUsuario">Farm. Carregando...</span>
+            <button id="btnLogout" class="btn-logout">Sair</button>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="search-section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <div>
+                    <h1>Medicamentos Fracionados</h1>
+                    <p>Histórico e relatórios de fracionamentos realizados.</p>
+                </div>
+                <button id="btnImprimirRelatorioGeral" class="btn-primary">
+                    📄 Imprimir Relatório Geral
+                </button>
+            </div>
+
+            <!-- Tabela de Fracionados -->
+            <div style="overflow-x: auto; margin-top: 20px;">
+                <table style="width: 100%; border-collapse: collapse; background: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+                    <thead>
+                        <tr style="background-color: #f9fafb; text-align: left; border-bottom: 2px solid #e5e7eb; color: #4a4a4a; font-size: 13px;">
+                            <th style="padding: 14px 16px;">Medicamento</th>
+                            <th style="padding: 14px 16px;">Princípio Ativo</th>
+                            <th style="padding: 14px 16px;">Data / Hora</th>
+                            <th style="padding: 14px 16px;">Responsável</th>
+                            <th style="padding: 14px 16px; text-align: center;">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaFracionadosBody">
+                        <tr>
+                            <td colspan="5" style="padding: 20px; text-align: center; color: #888;">Carregando histórico...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>

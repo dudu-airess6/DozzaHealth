@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DozzaHealth - Busca de Medicamentos Pediátricos</title>
+    <link rel="stylesheet" href="busca.css">
+</head>
+<body>
+    <header class="topbar">
+        <div class="logo">
+            <h2>Dozza<span>Health</span></h2>
+        </div>
+        <nav class="nav-links">
+            <a href="busca.html" class="nav-item active">📦 Estoque / Busca</a>
+            <a href="fracionados.html" class="nav-item">⚙️ Fracionados</a>
+        </nav>
+        <div class="user-info">
+            <span id="labelUsuario">Farm. Carregando...</span>
+            <button id="btnLogout" class="btn-logout">Sair</button>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="search-section">
+            <h1>Busca de Prescrições Líquidas</h1>
+            <p>Acesso restrito a farmacêuticos credenciados</p>
+
+            <form id="formBusca" class="search-form">
+                <!-- Grupo da Barra de Busca Principal -->
+                <div class="search-input-group">
+                    <input 
+                        type="text" 
+                        id="inputQuery" 
+                        placeholder="Digite o nome do medicamento ou princípio ativo..."
+                    >
+                    <button type="submit" class="btn-primary">🔍 Buscar</button>
+                </div>
+
+                <!-- Select oculto para ponte com JS -->
+                <select id="selectForma" style="display: none;">
+                    <option value="">Todas</option>
+                    <option value="Gotas">Gotas</option>
+                    <option value="Xarope">Xarope</option>
+                    <option value="Suspensão">Suspensão</option>
+                    <option value="Solução">Solução</option>
+                    <option value="Spray">Spray</option>
+                </select>
+
+                <!-- Chips Visuais de Filtro + Botão Limpar -->
+                <div class="filter-container">
+                    <span class="filter-label">Filtrar por Forma Farmacêutica:</span>
+                    <div class="filter-chips" id="filterChips">
+                        <button type="button" class="chip-btn active" data-value="">Todas</button>
+                        <button type="button" class="chip-btn" data-value="Gotas">💧 Gotas</button>
+                        <button type="button" class="chip-btn" data-value="Xarope">🥄 Xarope</button>
+                        <button type="button" class="chip-btn" data-value="Suspensão">🧪 Suspensão</button>
+                        <button type="button" class="chip-btn" data-value="Solução">🧴 Solução</button>
+                        <button type="button" class="chip-btn" data-value="Spray">💨 Spray</button>
+                        
+                        <!-- Ação de Limpar integrada aos chips -->
+                        <button type="button" id="btnLimparFiltros" class="chip-btn chip-clear">🧹 Limpar Filtros</button>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+        <section class="results-section">
+            <div class="results-header">
+                <span id="infoTotal">Aguardando busca...</span>
+            </div>
+
+            <div id="gridResultados" class="grid-cards">
+                <!-- Cards injetados dinamicamente via JS -->
+            </div>
+
+            <!-- Contêiner de paginação limpo (gerado via JS) -->
+            <div id="paginacao" class="pagination-controls hidden"></div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>

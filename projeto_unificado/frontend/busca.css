@@ -1,0 +1,489 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #eef2f5;
+    color: #4a4a4a;
+    min-height: 100vh;
+}
+
+/* ============================================================
+   HEADER / TOPBAR & NAVEGAÇÃO
+   ============================================================ */
+.topbar {
+    background-color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo h2 {
+    color: #4a4a4a;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.logo h2 span {
+    color: #77dd77;
+}
+
+.nav-links {
+    display: flex;
+    gap: 12px;
+}
+
+.nav-item {
+    text-decoration: none;
+    color: #6b7280;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.nav-item:hover {
+    color: #4a4a4a;
+    background-color: #f3f4f6;
+}
+
+.nav-item.active {
+    color: #278527;
+    background-color: #f0fdf4;
+    border: 1px solid #bbf7d0;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+#labelUsuario {
+    font-weight: 600;
+    color: #4a4a4a;
+    font-size: 14px;
+}
+
+.btn-logout {
+    background-color: transparent;
+    color: #ef4444;
+    border: 1px solid #fca5a5;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.btn-logout:hover {
+    background-color: #fef2f2;
+    border-color: #ef4444;
+}
+
+/* ============================================================
+   CONTEÚDO PRINCIPAL & FORMULÁRIO DE BUSCA
+   ============================================================ */
+.container {
+    max-width: 1100px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+.search-section {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+    margin-bottom: 25px;
+}
+
+.search-section h1 {
+    color: #4a4a4a;
+    font-size: 24px;
+    margin-bottom: 6px;
+}
+
+.search-section p {
+    color: #888888;
+    font-size: 13px;
+    margin-bottom: 20px;
+}
+
+.search-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+}
+
+.search-input-group {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+}
+
+.search-input-group input[type="text"] {
+    flex: 1;
+    background-color: #f9fafb;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 14px;
+    color: #1f2937;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+.search-input-group input[type="text"]:focus {
+    background-color: #ffffff;
+    border-color: #278527;
+    box-shadow: 0 0 0 3px rgba(39, 133, 39, 0.15);
+}
+
+.btn-primary {
+    background-color: #77dd77;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #66cc66;
+}
+
+.btn-secondary {
+    background-color: #f3f4f6;
+    color: #4b5563;
+    border: 1px solid #d1d5db;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-secondary:hover {
+    background-color: #e5e7eb;
+}
+
+/* ============================================================
+   CHIPS DE FILTRO (Forma Farmacêutica)
+   ============================================================ */
+.filter-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 4px;
+}
+
+.filter-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #4b5563;
+}
+
+.filter-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.chip-btn {
+    background-color: #f3f4f6;
+    border: 1px solid #e5e7eb;
+    color: #4b5563;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    outline: none;
+}
+
+.chip-btn:hover {
+    background-color: #e5e7eb;
+    color: #1f2937;
+    transform: translateY(-1px);
+}
+
+.chip-btn.active {
+    background-color: #f0fdf4;
+    border-color: #86efac;
+    color: #166534;
+    box-shadow: 0 2px 6px rgba(39, 133, 39, 0.12);
+}
+
+/* ============================================================
+   GRID DE RESULTADOS E CARDS DE MEDICAMENTOS
+   ============================================================ */
+.results-header {
+    margin-bottom: 15px;
+    color: #6b7280;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.grid-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+}
+
+.card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 22px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+    border-left: 5px solid #77dd77;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+}
+
+.card h3 {
+    color: #4a4a4a;
+    font-size: 18px;
+    margin-bottom: 12px;
+}
+
+.card p {
+    font-size: 13px;
+    color: #6b7280;
+    margin-bottom: 6px;
+    line-height: 1.4;
+}
+
+.card p strong {
+    color: #4a4a4a;
+}
+
+.tag-forma {
+    align-self: flex-start;
+    background-color: #f0fdf4;
+    color: #278527;
+    border: 1px solid #bbf7d0;
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-weight: 600;
+    margin-top: 12px;
+    text-transform: capitalize;
+}
+
+.btn-fracionar {
+    margin-top: 15px;
+    width: 100%;
+    background-color: #2563eb;
+    color: #ffffff;
+    border: none;
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+}
+
+.btn-fracionar:hover {
+    background-color: #1d4ed8;
+}
+
+.btn-fracionar:active {
+    transform: scale(0.98);
+}
+
+.btn-fracionar:disabled {
+    background-color: #94a3b8;
+    cursor: not-allowed;
+}
+
+/* ============================================================
+   PAGINAÇÃO NUMÉRICA DINÂMICA
+   ============================================================ */
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+}
+
+.pagination-controls button {
+    background-color: #ffffff;
+    color: #77dd77;
+    border: 1px solid #77dd77;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.pagination-controls button:hover:not(:disabled) {
+    background-color: #f0fdf4;
+}
+
+.pagination-controls button.active {
+    background-color: #77dd77;
+    color: #ffffff;
+    border-color: #77dd77;
+    font-weight: bold;
+}
+
+.pagination-controls button:disabled {
+    opacity: 0.4;
+    border-color: #d1d5db;
+    color: #9ca3af;
+    cursor: not-allowed;
+}
+
+.pagination-ellipsis {
+    color: #6b7280;
+    font-weight: bold;
+    padding: 0 4px;
+}
+
+.hidden {
+    display: none;
+}
+
+/* ============================================================
+   TOAST NOTIFICATIONS (Alertas Flutuantes)
+   ============================================================ */
+#toastContainer {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.toast {
+    min-width: 300px;
+    padding: 14px 20px;
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    animation: slideInRight 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
+}
+
+.toast.sucesso { background-color: #10b981; }
+.toast.erro { background-color: #ef4444; }
+.toast.info { background-color: #3b82f6; }
+
+@keyframes slideInRight {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes fadeOut {
+    to { opacity: 0; transform: translateY(10px); }
+}
+
+/* ============================================================
+   MODAL DE CONFIRMAÇÃO CUSTOMIZADO
+   ============================================================ */
+.custom-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9998;
+    opacity: 0;
+    animation: fadeInModal 0.2s ease forwards;
+}
+
+.custom-modal-box {
+    background: #ffffff;
+    padding: 28px;
+    border-radius: 12px;
+    max-width: 440px;
+    width: 90%;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.custom-modal-box h3 {
+    margin: 0 0 10px 0;
+    color: #1f2937;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.custom-modal-box p {
+    color: #4b5563;
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0 0 24px 0;
+    white-space: pre-line;
+}
+
+.custom-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+@keyframes fadeInModal {
+    to { opacity: 1; }
+}
+.chip-btn.chip-clear {
+    background-color: #fef2f2;
+    border-color: #fca5a5;
+    color: #dc2626;
+    margin-left: auto; /* Empurra o botão de limpar para a extremidade direita dos chips */
+}
+
+.chip-btn.chip-clear:hover {
+    background-color: #fee2e2;
+    border-color: #ef4444;
+    color: #b91c1c;
+    transform: translateY(-1px);
+}

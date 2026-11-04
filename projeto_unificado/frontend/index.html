@@ -1,0 +1,44 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DozzaHealth - Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="login-card">
+            <div class="logo-area">
+                <span class="logo-icon">+</span>
+                <h1>DozzaHealth</h1>
+            </div>
+            <p class="subtitle">Software de unitarização de gotas em frascos de medicamentos</p>
+            
+            <form id="loginForm">
+                <div class="input-group">
+                    <input type="text" id="credencial" placeholder="Email ou CPF" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="senha" placeholder="Senha" required>
+                    <a href="#" class="forgot-password">Esqueceu a senha?</a>
+                </div>
+                
+                <button type="submit" class="btn-primary">Entrar</button>
+            </form>
+
+            <div class="divider">
+                <span>ou</span>
+            </div>
+
+            <p class="new-user">Novo por aqui?</p>
+            <button type="button" id="btnCadastrar" class="btn-secondary">Cadastrar Usuário</button>
+            
+            <div id="mensagemFeedback" class="feedback"></div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

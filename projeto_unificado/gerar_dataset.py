@@ -1,0 +1,266 @@
+import csv
+import os
+
+os.makedirs("data", exist_ok=True)
+ARQUIVO_SAIDA = os.path.join("data", "medicamentos_liquidos.csv")
+
+# 200 Medicamentos Líquidos 100% Únicos
+medicamentos = [
+    # Dipirona (1-6)
+    (1, "Dipirona Sódica Gotas Medley", "Dipirona Sódica", "Gotas (Solução Oral)", "500mg/ml", "1 gota/kg por dose", "Tomar via oral de 6 em 6 horas em caso de dor ou febre."),
+    (2, "Novalgina Gotas", "Dipirona Monoidratada", "Gotas (Solução Oral)", "500mg/ml", "20 a 40 gotas por dose", "Uso adulto e pediátrico acima de 3 meses."),
+    (3, "Anador Gotas", "Dipirona Sódica", "Gotas (Solução Oral)", "500mg/ml", "1 gota/kg por dose", "Uso analgésico e antitérmico."),
+    (4, "Dipirona Solução Oral Eurofarma", "Dipirona Sódica", "Solução Oral", "50mg/ml", "10ml a 20ml de 6 em 6h", "Tomar em caso de febre alta ou dor moderada."),
+    (5, "Novalgina Xarope Infantil", "Dipirona Monoidratada", "Xarope", "50mg/ml", "5ml a 10ml de 6 em 6h", "Acompanha copo dosador. Uso infantil."),
+    (6, "Magnopyrol Gotas", "Dipirona Sódica", "Gotas", "500mg/ml", "1 gota/kg por dose", "Não exceder 4 doses diárias."),
+
+    # Paracetamol (7-12)
+    (7, "Tylenol Gotas", "Paracetamol", "Gotas (Solução Oral)", "200mg/ml", "1 gota/kg por dose", "Não ultrapassar 5 doses em 24 horas."),
+    (8, "Paracetamol Bebê Drops Neo Química", "Paracetamol", "Gotas (Solução Oral)", "100mg/ml", "1ml a 2ml de 6 em 6h", "Acompanha seringa dosadora."),
+    (9, "Tylenol Infantil Xarope", "Paracetamol", "Xarope (Suspensão Oral)", "32mg/ml", "5ml a 15ml de 6 em 6h", "Sabor frutas. Agitar antes de usar."),
+    (10, "Paracetamol Solução Oral Cimed", "Paracetamol", "Solução Oral", "200mg/ml", "20 a 35 gotas por dose", "Uso para dor leve a moderada."),
+    (11, "Resfenol Gotas Baby", "Paracetamol + Clorfeniramina", "Gotas", "100mg/ml + 2mg/ml", "1 gota/kg por dose", "Alívio dos sintomas de gripes e resfriados."),
+    (12, "Paracetamol Xarope Prati-Donaduzzi", "Paracetamol", "Xarope", "40mg/ml", "10ml de 6 em 6 horas", "Uso pediátrico."),
+
+    # Ibuprofeno (13-18)
+    (13, "Alivium Gotas 100mg", "Ibuprofeno", "Gotas (Suspensão Oral)", "100mg/ml", "1 gota/kg por dose", "Tomar com alimentos. Máximo 40 gotas/dose."),
+    (14, "Alivium Gotas 50mg Infantil", "Ibuprofeno", "Gotas (Suspensão Oral)", "50mg/ml", "2 gotas/kg por dose", "Uso para febre e dor em crianças."),
+    (15, "Ibuprofeno Suspensão Oral Medley", "Ibuprofeno", "Suspensão Oral", "20mg/ml", "5ml a 10ml de 8 em 8h", "Agitar bem antes de usar."),
+    (16, "Ibuprofeno Suspensão 50mg/ml Eurofarma", "Ibuprofeno", "Suspensão Oral", "50mg/ml", "3ml a 5ml de 6 em 6h", "Tomar após as refeições."),
+    (17, "Advil Gotas Infantil", "Ibuprofeno", "Gotas (Suspensão Oral)", "100mg/ml", "1 gota/kg por dose", "Anti-inflamatório e antitérmico."),
+    (18, "Ibuprofeno Solução Oral EMS", "Ibuprofeno", "Solução Oral", "50mg/ml", "5ml de 8 em 8 horas", "Uso oral pediátrico."),
+
+    # Amoxicilina & Combinações (19-26)
+    (19, "Amoxicilina Suspensão 250mg Medley", "Amoxicilina", "Suspensão Oral", "250mg/5ml", "5ml de 8 em 8 horas", "Tomar por 7 a 10 dias. Agitar antes de usar."),
+    (20, "Amoxicilina Suspensão 500mg Neo Química", "Amoxicilina", "Suspensão Oral", "500mg/5ml", "5ml de 12 em 12 horas", "Uso sob prescrição médica por 7 dias."),
+    (21, "Clavulin Suspensão 250mg", "Amoxicilina + Clavulanato de Potássio", "Suspensão Oral", "250mg + 62.5mg/5ml", "5ml de 8 em 8 horas", "Manter sob refrigeração após reconstituição."),
+    (22, "Clavulin BD Suspensão 400mg", "Amoxicilina + Clavulanato de Potássio", "Suspensão Oral", "400mg + 57mg/5ml", "5ml de 12 em 12 horas", "Tomar no início da refeição."),
+    (23, "Novocilin Suspensão 250mg", "Amoxicilina", "Suspensão Oral", "250mg/5ml", "5ml de 8 em 8 horas", "Antibiótico de amplo espectro."),
+    (24, "Amoxicilina + Clavulanato Eurofarma 875mg/5ml", "Amoxicilina + Clavulanato de Potássio", "Suspensão Oral", "875mg + 125mg/5ml", "5ml de 12 em 12h", "Uso adulto e pediátrico grave."),
+    (25, "Velamox Suspensão Oral", "Amoxicilina BD", "Suspensão Oral", "400mg/5ml", "5ml de 12 em 12 horas", "Agitar bem a cada administração."),
+    (26, "Amoxicilina Gotas Pediátricas", "Amoxicilina", "Gotas (Suspensão)", "100mg/ml", "1ml de 8 em 8 horas", "Para lactentes sob orientação estrita."),
+
+    # Corticoides (27-34)
+    (27, "Prelone Solução Oral 3mg", "Fosfato Sódico de Prednisolona", "Solução Oral", "3mg/ml", "1mg/kg por dia", "Tomar em dose única pela manhã."),
+    (28, "Predsim Solução Oral 3mg", "Fosfato Sódico de Prednisolona", "Solução Oral", "3mg/ml", "5ml a 10ml pela manhã", "Tratamento curto de 3 a 5 dias."),
+    (29, "Prednisolona Gotas 11mg Eurofarma", "Fosfato Sódico de Prednisolona", "Gotas", "11mg/ml", "5 a 10 gotas ao dia", "Anti-inflamatório esteroide concentrado."),
+    (30, "Decadron Elixir", "Dexametasona", "Elixir", "0.1mg/ml", "15ml ao dia fracionados", "Processos inflamatórios e alérgicos graves."),
+    (31, "Dexametasona Solução Oral Ache", "Dexametasona", "Solução Oral", "0.5mg/5ml", "2.5ml de 12 em 12h", "Corticosteroide sintético."),
+    (32, "Ko아가/Prednisolona Solução 1mg/ml", "Prednisolona", "Solução Oral", "1mg/ml", "5ml uma vez ao dia", "Uso pediátrico."),
+    (33, "Celestone Solução Oral", "Betametasona", "Solução Oral", "0.5mg/5ml", "5ml a 10ml ao dia", "Corticoterapia oral."),
+    (34, "Celestamine Xarope", "Betametasona + Maleato de Dexclorfeniramina", "Xarope", "0.25mg + 2mg/5ml", "5ml de 8 em 8 horas", "Alívio de alergias respiratórias e dermatológicas."),
+
+    # Antialérgicos & Descongestionantes (35-46)
+    (35, "Desalex Xarope", "Desloratadina", "Xarope", "0.5mg/ml", "5ml uma vez ao dia", "Tomar preferencialmente à noite."),
+    (36, "Sigradim Solução Oral", "Desloratadina", "Solução Oral", "1mg/ml", "2.5ml uma vez ao dia", "Anti-histamínico de 2ª geração."),
+    (37, "Claritin Xarope", "Loratadina", "Xarope", "1mg/ml", "10ml uma vez ao dia", "Não causa sonolência na maioria dos pacientes."),
+    (38, "Loratadina Solução Pediátrica Neo Química", "Loratadina", "Solução Oral", "1mg/ml", "5ml uma vez ao dia", "Uso de 2 a 12 anos."),
+    (39, "Polaramine Xarope", "Maleato de Dexclorfeniramina", "Xarope", "0.4mg/ml", "5ml de 6 em 6 horas", "Anti-histamínico clássico."),
+    (40, "Histamin Xarope", "Maleato de Dexclorfeniramina", "Xarope", "0.4mg/ml", "5ml de 8 em 8 horas", "Alívio do prurido e rinite."),
+    (41, "Hixizine Xarope", "Cloridrato de Hidroxizine", "Xarope", "2mg/ml", "10ml a 25ml de 8 em 8h", "Ansiolítico e antipruriginoso."),
+    (42, "Fenergan Xarope", "Cloridrato de Prometazina", "Xarope", "1mg/ml", "10ml de 8 em 8 horas", "Anti-histamínico e sedativo."),
+    (43, "Allegra Pediátrico Suspensão", "Cloridrato de Fexofenadina", "Suspensão Oral", "6mg/ml", "5ml de 12 em 12 horas", "Antialérgico não sedante."),
+    (44, "Zyrtec Solução Oral", "Dicloridrato de Cetirizina", "Solução Oral", "1mg/ml", "10ml uma vez ao dia", "Tratamento da rinite alérgica."),
+    (45, "Decongex Plus Xarope", "Maleato de Bronfeniramina + Cloridrato de Fenilefrina", "Xarope", "2mg + 5mg/5ml", "10ml de 8 em 8h", "Descongestionante nasal e antialérgico."),
+    (46, "Naldecon Baby Gotas", "Paracetamol + Clorfeniramina + Fenilefrina", "Gotas", "100mg + 0.5mg + 1mg/ml", "1 gota/kg de 6 em 6h", "Alívio dos sintomas de gripes."),
+
+    # Xaropes Respiratórios & Expectorantes (47-58)
+    (47, "Brontoped Xarope", "Acebrofilina", "Xarope Pediátrico", "25mg/5ml", "5ml de 12 em 12 horas", "Broncodilator e mucolítico."),
+    (48, "Filinar G Xarope Adulto", "Acebrofilina", "Xarope", "50mg/5ml", "10ml de 12 em 12h", "Facilita a expulsão de secreções pulmonares."),
+    (49, "Mucosolvan Xarope Adulto", "Cloridrato de Ambroxol", "Xarope", "30mg/5ml", "5ml de 8 em 8 horas", "Expectorante e mucolítico."),
+    (50, "Mucosolvan Xarope Pediátrico", "Cloridrato de Ambroxol", "Xarope", "15mg/5ml", "5ml de 8 em 8 horas", "Desobstrui os brônquios."),
+    (51, "Bisolvon Xarope Adulto", "Cloridrato de Bromexina", "Xarope", "8mg/5ml", "5ml de 8 em 8 horas", "Fluidifica o catarro."),
+    (52, "Aerolin Xarope", "Sulfato de Salbutamol", "Xarope", "2mg/5ml", "5ml a 10ml de 6 em 6h", "Alívio do broncoespasmo na asma."),
+    (53, "Abrilar Xarope Fitoterápico", "Extrato Seco de Hedera Helix", "Xarope", "7mg/ml", "5ml de 8 em 8 horas", "Expectorante natural."),
+    (54, "Propan Xarope", "Carbocisteína", "Xarope Pediátrico", "20mg/ml", "5ml de 8 em 8 horas", "Tratamento de afecções respiratórias."),
+    (55, "Mucofan Xarope Adulto", "Carbocisteína", "Xarope", "50mg/ml", "10ml de 8 em 8 horas", "Reduz a viscosidade do muco."),
+    (56, "Seki Xarope", "Cloperastina", "Xarope", "3.54mg/ml", "5ml a 10ml de 8 em 8h", "Antitussígeno para tosse seca."),
+    (57, "Notuss Xarope", "Dropropizina", "Xarope", "3mg/ml", "10ml de 8 em 8 horas", "Inibidor da tosse irritativa."),
+    (58, "Vibral Xarope Pediátrico", "Dropropizina", "Xarope", "1.5mg/ml", "5ml de 8 em 8 horas", "Sabor morango. Para tosse seca."),
+
+    # Antiheméticos, Gastrintestinais & Digestivos (59-72)
+    (59, "Dramin B6 Gotas", "Dimenidrinato + Cloridrato de Piridoxina", "Gotas (Solução Oral)", "25mg/ml + 5mg/ml", "1 gota/kg por dose", "Prevenção de enjoos em viagens."),
+    (60, "Dramin Solução Oral", "Dimenidrinato", "Solução Oral", "2.5mg/ml", "10ml de 6 em 6 horas", "Controle de vômitos."),
+    (61, "Vonau Flash Solução Oral 4mg", "Cloridrato de Ondansetrona", "Solução Oral", "4mg/5ml", "5ml de 8 em 8 horas", "Antihemético potente."),
+    (62, "Ondansetrona Gotas Eurofarma", "Cloridrato de Ondansetrona", "Gotas", "2mg/ml", "1 gota/kg por dose", "Uso pediátrico gastroenterite."),
+    (63, "Luftal Gotas 75mg", "Simeticona", "Gotas (Emulsão Oral)", "75mg/ml", "20 a 30 gotas de 8 em 8h", "Alívio de gases e estufamento."),
+    (64, "Luftal Gotas Pediátrico 30mg", "Simeticona", "Gotas (Emulsão Oral)", "30mg/ml", "10 a 15 gotas de 8 em 8h", "Alívio de cólicas por gases em bebês."),
+    (65, "Plasil Gotas", "Cloridrato de Metoclopramida", "Gotas (Solução Oral)", "4mg/ml", "20 a 40 gotas antes das refeições", "Acelera o esvaziamento gástrico."),
+    (66, "Digesan Gotas", "Bromoprida", "Gotas (Solução Oral)", "4mg/ml", "1 a 2 gotas por kg", "Distúrbios da motilidade digestiva."),
+    (67, "Bromoprida Solução Oral EMS", "Bromoprida", "Solução Oral", "1mg/ml", "10ml de 8 em 8 horas", "Prevenção de náuseas."),
+    (68, "Motilium Suspensão Oral", "Domperidona", "Suspensão Oral", "1mg/ml", "2.5ml para cada 10kg de peso", "Tomar 15min antes das refeições."),
+    (69, "Mylanta Plus Suspensão", "Hidróxido de Alumínio + Hidróxido de Magnésio + Simeticona", "Suspensão Oral", "80mg + 80mg + 6mg/ml", "5ml a 10ml após refeições", "Antiácido e antiflatulento."),
+    (70, "Simeco Plus Suspensão", "Hidróxido de Alumínio + Hidróxido de Magnésio", "Suspensão Oral", "37mg + 40mg/ml", "10ml após refeições", "Alívio da azia e queimação."),
+    (71, "Lactulona Xarope", "Lactulose", "Xarope", "667mg/ml", "15ml a 30ml ao dia", "Tratamento da constipação crônica."),
+    (72, "Tamarine Xarope Fitoterápico", "Senna + Cassia fistula", "Xarope", "5mg/ml", "5ml a 10ml à noite", "Laxativo vegetal."),
+
+    # Antibióticos & Antifúngicos Diversos (73-86)
+    (73, "Keflex Suspensão 250mg", "Cefalexina", "Suspensão Oral", "250mg/5ml", "5ml de 6 em 6 horas", "Tratamento de infecções bacterianas."),
+    (74, "Keflex Suspensão 500mg", "Cefalexina", "Suspensão Oral", "500mg/5ml", "5ml de 12 em 12 horas", "Antibiótico cefalosporínico."),
+    (75, "Zithromax Suspensão 200mg", "Azitromicina Monoidratada", "Suspensão Oral", "200mg/5ml", "10mg/kg uma vez ao dia", "Tratamento curto de 3 a 5 dias."),
+    (76, "Azitromicina Suspensão 600mg Medley", "Azitromicina", "Suspensão Oral", "200mg/5ml", "5ml uma vez ao dia por 3 dias", "Infecções do trato respiratório."),
+    (77, "Klaricid Suspensão 125mg", "Claritromicina", "Suspensão Oral", "125mg/5ml", "7.5mg/kg de 12 em 12h", "Manter em temperatura ambiente."),
+    (78, "Klaricid Suspensão 250mg", "Claritromicina", "Suspensão Oral", "250mg/5ml", "5ml de 12 em 12 horas", "Uso pediátrico sob prescrição."),
+    (79, "Bactrim Suspensão Pediátrica", "Sulfametoxazol + Trimetoprima", "Suspensão Oral", "200mg + 40mg/5ml", "5ml a 10ml de 12 em 12h", "Tratamento de infecções urinárias."),
+    (80, "Bactrim F Suspensão", "Sulfametoxazol + Trimetoprima", "Suspensão Oral", "400mg + 80mg/5ml", "5ml de 12 em 12 horas", "Fórmula forte."),
+    (81, "Zoltec Suspensão Oral", "Fluconazol", "Suspensão Oral", "50mg/5ml", "3mg/kg dose única diária", "Antifúngico sistêmico."),
+    (82, "Nizoral Suspensão Oral", "Cetoconazol", "Suspensão Oral", "20mg/ml", "5ml uma vez ao dia", "Tratamento de micoses profundas."),
+    (83, "Pantelmin Suspensão", "Mebendazol", "Suspensão Oral", "20mg/ml", "5ml de 12 em 12h por 3 dias", "Antiparasitário de amplo espectro."),
+    (84, "Annita Suspensão 20mg", "Nitazoxanida", "Suspensão Oral", "20mg/ml", "7.5mg/kg de 12 em 12h", "Tomar com alimentos por 3 dias."),
+    (85, "Zentel Suspensão 400mg", "Albendazol", "Suspensão Oral", "40mg/ml", "10ml em dose única", "Antiparasitário infantil e adulto."),
+    (86, "Nystatin Suspensão Oral Medley", "Nistatina", "Suspensão Oral", "100.000 UI/ml", "1ml a 6ml de 6 em 6h", "Retor e bochechar antes de engolir."),
+
+    # Analgésicos Anti-inflamatórios Específicos (87-94)
+    (87, "Nisulid Gotas", "Nimesulida", "Gotas (Suspensão Oral)", "50mg/ml", "1 gota/kg de 12 em 12h", "Uso máximo por 5 dias consecutivos."),
+    (88, "Nimesulida Suspensão Oral Cimed", "Nimesulida", "Suspensão Oral", "10mg/ml", "5ml de 12 em 12 horas", "Tomar após as refeições."),
+    (89, "Cataflam Gotas", "Diclofenaco Resinato", "Gotas (Suspensão Oral)", "15mg/ml", "1 gota/kg de 8 em 8h", "Anti-inflamatório não esteroide."),
+    (90, "Voltaren Suspensão Oral Pediátrica", "Diclofenaco Potássico", "Suspensão Oral", "2mg/ml", "5ml de 8 em 8 horas", "Tratamento do inflamações e dores pós-operatórias."),
+    (91, "Maxsulid Suspensão", "Nimesulida Betaciclodextrina", "Suspensão Oral", "40mg/5ml", "5ml de 12 em 12 horas", "Absorção rápida."),
+    (92, "Toragesic Gotas Sublingual/Oral", "Trometamol de Ketorolaco", "Gotas (Solução Oral)", "20mg/ml", "10 a 20 gotas de 8 em 8h", "Dor aguda de moderada a intensa."),
+    (93, "Piroxicam Solução Oral", "Piroxicam", "Solução Oral", "10mg/ml", "1ml a 2ml ao dia", "Tratamento de quadros reumáticos."),
+    (94, "Flanax Xarope Pediátrico", "Naproxeno Sódico", "Xarope", "25mg/ml", "5ml de 12 em 12 horas", "Alívio prolongado da dor e febre."),
+
+    # Suplementos, Minerais & Vitaminas Líquidas (95-108)
+    (95, "Neutrofer Gotas", "Glicinato de Ferro Quelato", "Gotas (Solução Oral)", "50mg/ml de ferro", "1 a 2 gotas/kg ao dia", "Anemia ferropriva com alta tolerabilidade."),
+    (96, "Noripurum Gotas", "Complexo de Hidróxido de Ferro III", "Gotas (Solução Oral)", "50mg/ml", "20 a 40 gotas ao dia", "Tomar durante ou após as refeições."),
+    (97, "Noripurum Xarope", "Complexo de Hidróxido de Ferro III", "Xarope", "10mg/ml", "10ml ao dia", "Tratamento de carência de ferro."),
+    (98, "Aditil Gotas", "Vitamina A + Vitamina D3", "Gotas (Solução Oral)", "50.000 UI + 10.000 UI/ml", "2 a 5 gotas ao dia", "Prevenção de raquitismo e cegueira noturna."),
+    (99, "Adephedrin Gotas", "Vitamina A + D + E", "Gotas", "25.000 UI/ml", "5 gotas ao dia", "Suplemento vitamínico completo."),
+    (100, "Depura Gotas Vitamina D3", "Colecalciferol", "Gotas (Solução Oral)", "500 UI/gota", "1 a 2 gotas ao dia", "Manutenção da saúde óssea."),
+    (101, "Arovit Gotas", "Palmitato de Retinol (Vitamina A)", "Gotas", "150.000 UI/ml", "2 a 4 gotas ao dia", "Tratamento de hipovitaminose A."),
+    (102, "Cebion Gotas Vitamina C", "Ácido Ascórbico", "Gotas (Solução Oral)", "200mg/ml", "20 a 40 gotas ao dia", "Fortalecimento do sistema imunológico."),
+    (103, "Redoxon Gotas Infantil", "Ácido Ascórbico", "Gotas", "100mg/ml", "10 a 20 gotas ao dia", "Suplementação de vitamina C."),
+    (104, "Pediakid Xarope Multivitaminado", "Complexo Vitamínico A a Z", "Xarope", "Várias", "5ml duas vezes ao dia", "Suplemento alimentar infantil."),
+    (105, "Protenvis Xarope", "Aminoácidos + Complexo B", "Xarope", "5mg/ml", "10ml ao dia", "Estimulante do apetite e tônico."),
+    (106, "Apetivan BC Xarope", "Cloridrato de Ciproheptadina + Vitaminas", "Xarope", "1mg/5ml", "5ml a 10ml antes das refeições", "Estimulante do apetite."),
+    (107, "Carnabol Xarope", "Buclizina + Lisina + Vitaminas", "Xarope", "0.5mg/ml", "5ml de 12 em 12h", "Otimizador do crescimento e apetite."),
+    (108, "Apetil Solução Oral", "Ciproheptadina + B12", "Solução Oral", "0.8mg/ml", "5ml duas vezes ao dia", "Auxiliar no ganho de peso pediátrico."),
+
+    # Sistema Nervoso Central, Psiquiátricos & Anticonvulsivantes (109-122)
+    (109, "Rivotril Gotas 2.5mg", "Clonazepam", "Gotas (Solução Oral)", "2.5mg/ml (0.1mg/gota)", "1 a 5 gotas ao dia", "Ansiolítico e anticonvulsivante (Tarja Preta)."),
+    (110, "Haldol Gotas 2mg", "Haloperidol", "Gotas (Solução Oral)", "2mg/ml", "5 a 20 gotas ao dia", "Antipsicótico potente."),
+    (111, "Risperdal Solução Oral 1mg", "Risperidona", "Solução Oral", "1mg/ml", "0.5mg a 2mg ao dia", "Acompanha seringa dosadora graduada."),
+    (112, "Depakene Xarope 250mg", "Valproato de Sódio", "Xarope", "250mg/5ml", "10mg a 15mg/kg ao dia", "Anticonvulsivante e estabilizador de humor."),
+    (113, "Tegretol Suspensão 20mg/ml", "Carbamazepina", "Suspensão Oral", "20mg/ml", "100mg a 200mg de 12 em 12h", "Tratamento de epilepsia e dores neuropáticas."),
+    (114, "Keppra Solução Oral 100mg", "Levetiracetam", "Solução Oral", "100mg/ml", "10mg a 30mg/kg de 12 em 12h", "Tratamento adjuvante em crises epilépticas."),
+    (115, "Neuleptil Solução Oral 1%", "Periciazina", "Gotas (Solução Oral)", "10mg/ml (1%)", "1 a 5 gotas ao dia", "Neuroléptico para distúrbios de comportamento."),
+    (116, "Neuleptil Solução Oral 4%", "Periciazina", "Gotas (Solução Oral)", "40mg/ml (4%)", "5 a 20 gotas ao dia", "Uso adulto em psiquiatria."),
+    (117, "Amplictil Gotas 4%", "Clorpromazina", "Gotas (Solução Oral)", "40mg/ml", "1 a 5 gotas por dose", "Antipsicótico e sedativo."),
+    (118, "Gardenal Solução Oral 4%", "Fenobarbital", "Gotas (Solução Oral)", "40mg/ml (1mg/gota)", "2 a 5mg/kg ao dia", "Barbitúrico anticonvulsivante."),
+    (119, "Hydantal Solução Oral", "Fenitoína Sódica", "Suspensão Oral", "20mg/ml", "5ml de 8 em 8 horas", "Controle de crises convulsivas."),
+    (120, "Arapuca/Trileptal Suspensão 60mg", "Oxcarbazepina", "Suspensão Oral", "60mg/ml", "8mg a 10mg/kg de 12 em 12h", "Antiepiléptico infantil e adulto."),
+    (121, "Seroquel Solução Pediátrica", "Fumarato de Quetiapina", "Solução Oral", "20mg/ml", "2.5ml à noite", "Uso psiquiátrico sob retenção de receita."),
+    (122, "Thorazine Gotas", "Clorpromazina", "Gotas", "10mg/ml", "10 a 20 gotas ao dia", "Tratamento do soluço refratário e psicoses."),
+
+    # Opioides, Analgésicos Fortes & Antitussígenos Controlados (123-130)
+    (123, "Codein Xarope 3mg", "Fosfato de Codeína", "Xarope", "3mg/ml", "5ml a 10ml de 6 em 6h", "Analgésico opioide e antitussígeno."),
+    (124, "Tramal Gotas 100mg", "Cloridrato de Tramadol", "Gotas (Solução Oral)", "100mg/ml", "20 a 40 gotas de 6 em 6h", "Dor moderada a intensa."),
+    (125, "Sylador Gotas", "Cloridrato de Tramadol", "Gotas (Solução Oral)", "50mg/ml", "10 a 20 gotas de 6 em 6h", "Analgésico central."),
+    (126, "Tylex Xarope Pediátrico", "Paracetamol + Codeína", "Xarope", "120mg + 12mg/5ml", "5ml de 6 em 6 horas", "Analgésico de associação para dor moderada."),
+    (127, "Dimorf Solução Oral 10mg/ml", "Sulfato de Morfina", "Solução Oral", "10mg/ml", "0.5ml a 1ml de 4 em 4h", "Opioide forte sob prescrição A1."),
+    (128, "Gotas de Toragesic Forte", "Ketorolaco Trometamol", "Gotas", "10mg/ml", "10 gotas de 6 em 6 horas", "Dor pós-operatória severa."),
+    (129, "Dolamin Gotas", "Clonixinato de Lisina", "Gotas (Solução Oral)", "125mg/ml", "15 a 30 gotas de 8 em 8h", "Analgésico para cefaleias e dores articulares."),
+    (130, "Morfina Solução Oral Pediátrica 1mg/ml", "Sulfato de Morfina", "Solução Oral", "1mg/ml", "1ml a 2ml sob prescrição médica hospitalar", "Controle rigoroso da dor."),
+
+    # Soluções Orais Específicas, Eletrólitos & Reidratação (131-144)
+    (131, "Pedialyte 45 Solução de Reidratação", "Cloreto de Sódio + Zinco + Glicose", "Solução Oral", "45 mEq/L de Sódio", "Tomar à vontade após evacuações líquidas", "Reidratação oral e reposição eletrolítica."),
+    (132, "Floralyte 90 Solução Oral", "Sais para Reidratação Oral", "Solução Oral", "90 mEq/L de Sódio", "Oferecer colheradas frequentes", "Tratamento da desidratação por diarreia."),
+    (133, "Hydraplex Solução Oral Guaraná", "Eletrólitos + Glicose", "Solução Oral", "45 mEq/L", "Tomar frio em pequenos goles", "Prevenção da desidratação."),
+    (134, "K-Citrat Solução Oral", "Citrato de Potássio", "Solução Oral", "2 mEq/ml", "5ml a 10ml diluídos em água", "Prevenção de cálculos renais de oxalato."),
+    (135, "Cloreto de Potássio Solução 10%", "Cloreto de Potássio", "Solução Oral", "100mg/ml", "5ml a 10ml após refeições", "Reposição de potássio em hipocalemia."),
+    (136, "Xarope de Citrato de Sódio", "Citrato de Sódio + Ácido Cítrico", "Xarope", "100mg/ml", "10ml de 8 em 8 horas", "Alcalinizante urinário."),
+    (137, "Xarope de Cloreto de Amônio", "Cloreto de Amônio", "Xarope", "50mg/ml", "5ml de 8 em 8 horas", "Acidificante urinário e expectorante."),
+    (138, "Gotas de Zinco Zincofran", "Sulfato de Zinco Monoidratado", "Gotas", "4mg de Zinco/ml", "1ml ao dia", "Suplemento de zinco para diarreia infantil."),
+    (139, "Adere D3 Solução Oral 10.000 UI/ml", "Colecalciferol", "Solução Oral", "10.000 UI/ml", "1ml por semana", "Dose de ataque para deficiência de vitamina D."),
+    (140, "Osteocix Solução Oral", "Citrato de Cálcio + Vitamina D3", "Solução Oral", "250mg + 400 UI/5ml", "10ml duas vezes ao dia", "Suplementação mineral óssea."),
+    (141, "Glicopan Pet/Humano Solução", "Aminoácidos + Vitaminas do Complexo B", "Solução Oral", "Concentrado", "5ml duas vezes ao dia", "Restabelecedor físico e nutricional."),
+    (142, "Magnesil Solução Oral", "Cloreto de Magnésio", "Solução Oral", "100mg/ml", "10ml ao dia", "Suplemento alimentar de magnésio."),
+    (143, "Xarope de Iodeto de Potássio", "Iodeto de Potássio", "Xarope", "20mg/ml", "5ml de 8 em 8 horas", "Expectorante broncodilatador clássico."),
+    (144, "Glicose Solução Oral 50%", "Glicose Anidra", "Solução Oral", "500mg/ml", "10ml a 20ml em caso de hipoglicemia", "Reversão rápida da hipoglicemia."),
+
+    # Oftálmicos/Otorrinolaringológicos em forma de Spray/Gotas Orais ou Mucosas (145-152)
+    (145, "Mecain Spray Oral", "Cloridrato de Lidocaína", "Spray Oral", "10mg/actuação", "1 a 2 borrifadas na garganta", "Anestésico local para dores de garganta."),
+    (146, "Hexomedine Spray Oral", "Isetionato de Hexamidina + Tetracaína", "Spray Oral", "1mg + 0.5mg/ml", "3 borrifadas 4 vezes ao dia", "Antisséptico e anestésico bucal."),
+    (147, "Amestil Spray Oral", "Benzidamina", "Spray Oral", "1.5mg/ml", "2 a 4 borrifadas de 4 em 4h", "Anti-inflamatório bucofaríngeo."),
+    (148, "Flogan Spray Oral", "Diclofenaco Colestiramina", "Spray Oral", "1.48mg/ml", "2 borrifadas 3 vezes ao dia", "Alívio de aftas e estomatites."),
+    (149, "Colutoid Solução Buco-faríngea", "Acetato de Dexametasona + Polimixina", "Spray/Solução Oral", "0.5mg/ml", "Aplicar na região afetada", "Tratamento de lesões ulceradas na boca."),
+    (150, "Cicatrizan Solução Oral/Tópica", "Extrato de Barbatimão", "Solução Oral/Tópica", "100mg/ml", "10ml duas vezes ao dia", "Cicatrizante anti-inflamatório natural."),
+    (151, "Propolis Spray Oral sem Álcool", "Extrato de Própolis Verde", "Spray Oral", "15%", "2 borrifadas 5 vezes ao dia", "Proteção natural da garganta."),
+    (152, "Pepsamar Suspensão", "Hidróxido de Alumínio", "Suspensão Oral", "60mg/ml", "10ml após refeições", "Protetor da mucosa gástrica."),
+
+    # Fitoterápicos, Homeopáticos e Medicina Natural Líquida (153-164)
+    (153, "Passiflorine Xarope", "Passiflora Incarnata", "Xarope", "100mg/ml", "10ml a 15ml à noite", "Calmante natural para insônia leve."),
+    (154, "Calman Solução Oral", "Passiflora + Crataegus + Salix alba", "Solução Oral", "0.1ml/ml", "10ml de 8 em 8 horas", "Sedativo leve e anxiolítico natural."),
+    (155, "Seakalm Gotas", "Passiflora Incarnata L.", "Gotas (Solução Oral)", "200mg/ml", "40 gotas duas vezes ao dia", "Tratamento da ansiedade leve."),
+    (156, "Valeriane Solução Oral", "Valeriana Officinalis", "Solução Oral", "50mg/ml", "5ml antes de dormir", "Promotor do sono reparador."),
+    (157, "Tarenka Xarope", "Pelargonium Sidoides", "Xarope", "8mg/ml", "2.5ml a 5ml de 8 em 8h", "Tratamento de infecções respiratórias agudas."),
+    (158, "Kaloba Gotas", "Pelargonium Sidoides EPs 7630", "Gotas (Solução Oral)", "825mg/g", "20 a 30 gotas de 8 em 8h", "Imunomodulador para resfriados."),
+    (159, "Umckaloabo Solução Oral", "Pelargonium Sidoides", "Solução Oral", "800mg/g", "30 gotas de 8 em 8 horas", "Reduz sintomas de bronquites e amigdalites."),
+    (160, "Xarope de Guaco Natulab", "Mikania Laevigata", "Xarope", "0.1ml/ml", "5ml de 8 em 8 horas", "Expectorante e broncodilatador fitoterápico."),
+    (161, "Melagrião Xarope", "Guaco + Polígala + Agrião + Própolis", "Xarope", "Extratos compostos", "10ml de 8 em 8 horas", "Tratamento de tosses associadas à gripe."),
+    (162, "Xarope de Agrião com Mel e Própolis", "Nasturtium Officinale + Mel", "Xarope", "Natural", "1 colher de sopa 3 vezes ao dia", "Alívio da irritação na garganta."),
+    (163, "Homeax Gotas Homeopáticas", "Aconitum + Belladonna + Bryonia", "Gotas", "1CH a 6CH", "5 gotas de 2 em 2 horas", "Sintomas iniciais de estados gripais."),
+    (164, "Stodal Xarope Homeopático", "Anemone pulsatilla + Rumex crispus + Sticta", "Xarope", "Várias matrizes", "15ml de 8 em 8 horas", "Tratamento homeopático de tosses."),
+
+    # Antiparasitários & Vermífugos Adicionais (165-172)
+    (165, "Ascaridil Solução Oral", "Cloridrato de Levamisolo", "Solução Oral", "10mg/ml", "10ml em dose única", "Tratamento específico de ascaridíase."),
+    (166, "Combantrin Suspensão", "Pamoato de Pirantel", "Suspensão Oral", "50mg/ml", "10mg/kg em dose única", "Eliminação de nematódeos intestinais."),
+    (167, "Pyrpam Suspensão", "Pamoato de Pyrvinium", "Suspensão Oral", "10mg/ml", "1ml por kg de peso corporal em dose única", "Tratamento específico da oxiuríase."),
+    (168, "Macmiror Suspensão Oral", "Nifuratel", "Suspensão Oral", "100mg/5ml", "5ml de 12 em 12 horas", "Antiparasitário e antibacteriano intestinal."),
+    (169, "Flagyl Suspensão Oral 40mg/ml", "Benzoato de Metronidazola", "Suspensão Oral", "40mg/ml", "5ml de 8 em 8 horas", "Tratamento de amebíase e giardíase."),
+    (170, "Metronidazol Suspensão 40mg Medley", "Metronidazol", "Suspensão Oral", "40mg/ml", "7.5ml de 8 em 8 horas", "Antiparasitário e antibacteriano anaeróbico."),
+    (171, "Secnidal Suspensão Oral 900mg", "Secnidazol", "Suspensão Oral", "30mg/ml", "30mg/kg em dose única", "Amebicida e giardicida dose única."),
+    (172, "Secnidazol Suspensão 450mg Eurofarma", "Secnidazol", "Suspensão Oral", "15mg/ml", "15ml em dose única infantil", "Tratamento rápido de diarreias parasitárias."),
+
+    # Hormônios, Moduladores Metabolismo & Específicos (173-182)
+    (173, "Puran T4 Solução Oral 100mcg", "Levotiroxina Sódica", "Solução Oral", "100mcg/ml", "1ml em jejum 30 min antes do café", "Repositor do hormônio tireoidiano."),
+    (174, "Synthroid Solução Oral 50mcg", "Levotiroxina Sódica", "Solução Oral", "50mcg/ml", "0.5ml a 1ml pela manhã", "Tratamento do hipotireoidismo infantil e adulto."),
+    (175, "Levoid Gotas 200mcg/ml", "Levotiroxina Sódica", "Gotas", "200mcg/ml (10mcg/gota)", "5 a 10 gotas pela manhã", "Ajuste preciso de dosagem tireoidiana."),
+    (176, "Gino-Canesten Solução/Gel Oral", "Clotrimazol", "Solução Oral/Mucosa", "10mg/ml", "Aplicar ou bochechar 3 vezes ao dia", "Tratamento de micoses orais."),
+    (177, "Dostinex Solução Oral", "Cabergolina", "Solução Oral", "0.5mg/ml", "0.5ml por semana", "Inibidor da secreção de prolactina."),
+    (178, "Miacalcic Solução Nasal/Oral", "Calcitonina de Salmão", "Solução Oral", "200 UI/ml", "1 borrifada ou dose diária", "Tratamento da osteoporose grave."),
+    (179, "Somatropina Solução Oral/Injetável", "Hormônio do Crescimento Humano", "Solução Oral/Parenteral", "12mg/ml", "Conforme prescrição endocrinológica", "Tratamento do déficit de crescimento."),
+    (180, "Desmopressina Solução Oral 0.1mg", "Acetato de Desmopressina", "Solução Oral", "0.1mg/ml", "1ml à noite", "Tratamento da enurese noturna e diabetes insipidus."),
+    (181, "Octreotide Solução Oral", "Acetato de Octreotida", "Solução Oral", "100mcg/ml", "1ml de 8 em 8 horas", "Controle de diarreia refratária e acromegalia."),
+    (182, "Florastor Solução Oral Pediátrica", "Saccharomyces Boulardii", "Suspensão Oral", "200mg/5ml", "5ml duas vezes ao dia", "Probiótico para restauração da flora intestinal."),
+
+    # Antibióticos de Uso Restrito / Hospitalar / Especializado (183-192)
+    (183, "Trofodermin Solução Oral/Mucosa", "Acetato de Clostebol + Neomicina", "Solução Mucosa", "5mg + 5mg/ml", "Aplicar na mucosa bucal 3 vezes ao dia", "Cicatrizante com antibiótico local."),
+    (184, "Ciprofloxacino Suspensão Oral 250mg", "Ciprofloxacino", "Suspensão Oral", "250mg/5ml", "5ml de 12 em 12 horas", "Fluoroquinolona para infecções graves."),
+    (185, "Ciprofloxacino Suspensão Oral 500mg", "Ciprofloxacino", "Suspensão Oral", "500mg/5ml", "5ml de 12 em 12 horas", "Uso sob retenção de receita branca 2 vias."),
+    (186, "Ofloxacino Solução Oral", "Ofloxacino", "Solução Oral", "200mg/10ml", "10ml de 12 em 12 horas", "Tratamento de infecções sistêmicas."),
+    (187, "Vancomicina Solução Oral 250mg", "Cloridrato de Vancomicina", "Solução Oral", "250mg/5ml", "5ml de 6 em 6 horas", "Tratamento da colite pseudomembranosa por C. difficile."),
+    (188, "Metronidazol Suspensão Hospitalar", "Metronidazol", "Suspensão Oral", "250mg/5ml", "5ml de 8 em 8 horas", "Uso adulto e pediátrico sob supervisão."),
+    (189, "Linezolida Solução Oral 100mg/5ml", "Linezolida", "Solução Oral", "100mg/5ml", "10ml de 12 em 12 horas", "Tratamento de infecções por bactérias gram-positivas resistentes."),
+    (190, "Cefprozil Suspensão 250mg", "Cefprozil", "Suspensão Oral", "250mg/5ml", "5ml de 12 em 12 horas", "Cefalosporina de 2ª geração."),
+    (191, "Cefaclor Suspensão 250mg", "Cefaclor", "Suspensão Oral", "250mg/5ml", "5ml de 8 em 8 horas", "Tratamento de otites e sinusites bacterianas."),
+    (192, "Cefaclor Suspensão 375mg", "Cefaclor", "Suspensão Oral", "375mg/5ml", "5ml de 12 em 12 horas", "Dosagem de liberação otimizada."),
+
+    # Formulados Especiais & Uso Pediátrico Específico (193-200)
+    (193, "Simeticona + Metoclopramida Gotas", "Simeticona + Metoclopramida", "Gotas (Solução Oral)", "50mg + 2mg/ml", "15 a 30 gotas antes das refeições", "Combinação antiflatulenta e procinética."),
+    (194, "Paracetamol + Cafeína Solução Oral", "Paracetamol + Cafeína", "Solução Oral", "100mg + 10mg/ml", "10ml de 6 em 6 horas", "Alívio rápido de enxaquecas."),
+    (195, "Dipirona + Escopolamina Gotas", "Dipirona Sódica + Hioscina", "Gotas (Solução Oral)", "333.4mg + 6.67mg/ml", "20 a 40 gotas de 8 em 8h", "Tratamento de cólicas intestinais e renais."),
+    (196, "Buscopan Composto Gotas", "Butilbrometo de Escopolamina + Dipirona", "Gotas", "6.67mg + 333.4mg/ml", "20 a 40 gotas em um pouco de água", "Alívio rápido das cólicas abdominais."),
+    (197, "Buscopan Pediátrico Gotas", "Butilbrometo de Escopolamina", "Gotas (Solução Oral)", "10mg/ml", "10 a 20 gotas de 8 em 8h", "Antiespasmódico puro sem analgésico."),
+    (198, "Tropinal Gotas", "Homatropina + Dipirona + Ametocaína", "Gotas", "1mg + 300mg + 1mg/ml", "20 gotas de 8 em 8 horas", "Antiespasmódico forte para espasmos severos."),
+    (199, "Atropina Solução Oral 0.5mg/ml", "Sulfato de Atropina", "Solução Oral", "0.5mg/ml", "0.5ml sob orientação médica restrita", "Anticolinérgico hospitalar."),
+    (200, "Amoxicilina + Sulbactam Suspensão", "Amoxicilina + Sulbactam", "Suspensão Oral", "250mg + 250mg/5ml", "5ml de 8 em 8 horas", "Inibidor de beta-lactamase de nova geração.")
+]
+
+headers = ["id", "nome_comercial", "principio_ativo", "forma_farmaceutica", "concentracao", "dosagem_padrao", "instrucoes_prescricao"]
+
+with open(ARQUIVO_SAIDA, mode="w", newline="", encoding="utf-8") as f:
+    writer = csv.DictWriter(f, fieldnames=headers)
+    writer.writeheader()
+    for med in medicamentos:
+        writer.writerow({
+            "id": med[0],
+            "nome_comercial": med[1],
+            "principio_ativo": med[2],
+            "forma_farmaceutica": med[3],
+            "concentracao": med[4],
+            "dosagem_padrao": med[5],
+            "instrucoes_prescricao": med[6]
+        })
+
+print(f"Sucesso! Arquivo '{ARQUIVO_SAIDA}' gerado com {len(medicamentos)} medicamentos 100% ÚNICOS!")
